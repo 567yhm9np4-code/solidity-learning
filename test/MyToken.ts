@@ -33,7 +33,6 @@ describe("my Token", () => {
       );
     });
   });
-
   // 1MT = 1*10^18
   describe("Mint", () => {
     it("should return 1MT balance for signer 0", async () => {
@@ -42,13 +41,21 @@ describe("my Token", () => {
         MINTING_AMOUNT * 10n ** DECIMALS,
       );
     });
+
+    // TDD : Test Driven Development
+    it("should return or revert when minting infinitely", async () => {
+      const hacker = signers[2];
+      const mintingAgainAmount = hre.ethers.parseUnits("10000", DECIMALS);
+      await expect(
+        myTokenC.connect(hacker).mint(mintingAgainAmount, hacker.address),
+      ).to.be.revertedWith("You are not authorized to manage this token");
+    });
   });
 
   describe("Transfer", () => {
     it("shoud have 0.5MT", async () => {
       const signer0 = signers[0];
       const signer1 = signers[1];
-
       await expect(
         myTokenC.transfer(
           hre.ethers.parseUnits("0.5", DECIMALS),
@@ -61,12 +68,10 @@ describe("my Token", () => {
           signer1.address,
           hre.ethers.parseUnits("0.5", DECIMALS),
         );
-
       expect(await myTokenC.balanceOf(signer1.address)).equal(
         hre.ethers.parseUnits("0.5", DECIMALS),
       );
     });
-
     it("shoud be reverted with insufficient balance error", async () => {
       const signer1 = signers[1];
       await expect(
@@ -77,8 +82,8 @@ describe("my Token", () => {
       ).to.be.revertedWith("Insufficient balance");
     });
   });
-  describe("Transfer event", () => {
-    it("should emit Transfer event", async () => {
+  describe("TransferFrom", () => {
+    it("should emit Approval event", async () => {
       const signer1 = signers[1];
       await expect(
         myTokenC.approve(
