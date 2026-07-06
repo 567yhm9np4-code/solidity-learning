@@ -28,6 +28,8 @@ contract MyToken {
         emit Approval(spender, amount);
     }
 
+
+
     function transferFrom(address from, address to, uint256 amount) external {
         address spender = msg.sender;
         require(allowance[from][spender] >= amount, "Insufficient allowance");
@@ -37,22 +39,22 @@ contract MyToken {
         emit Transfer(from, to, amount);
     }
 
+    function mint(uint256 amount, address owner) external {
+        _mint(amount, owner);
+    }
+
     function _mint(uint256 amount, address owner) internal {
-        // totalSupply = totalSupply + amount;
-        // balanceOf[owner] = balanceOf[owner] + amount;
         totalSupply += amount;
         balanceOf[owner] += amount;
+
         emit Transfer(address(0), owner, amount);
 
     }
-
-
     function transfer(uint256 amount, address to) external {
         require(balanceOf[msg.sender] >= amount, "Insufficient balance");
 
         balanceOf[msg.sender] -= amount;
         balanceOf[to] += amount;
-
 
         emit Transfer(msg.sender, to, amount);
     }
