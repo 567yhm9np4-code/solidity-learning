@@ -4,9 +4,6 @@ import { MyToken } from "../typechain-types";
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 import { DECIMALS, MINTING_AMOUNT } from "./constant";
 
-const MINTING_AMOUNT = 100n;
-const DECIMALS = 18n;
-
 describe("my Token", () => {
   let myTokenC: MyToken;
   let signers: HardhatEthersSigner[];
